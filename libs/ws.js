@@ -19,7 +19,6 @@ module.exports = {
 
     wss.on("connection", socket => {
       socket.on("message", message => {
-        console.log(message);
         const user = JSON.parse(message);
         if (user.login == true) {
           const data = {
@@ -38,7 +37,6 @@ module.exports = {
                 message: `${user.name} was disconnected due to
                     inactivity`
               };
-              console.log(`start clean ${user.name}`);
               wss.broadcast(JSON.stringify(data));
               socket.terminate();
               sockets.delete(user.name);
@@ -68,7 +66,6 @@ module.exports = {
                 message: `${user.name} was disconnected due to
                         inactivity`
               };
-              console.log(`start clean ${user.name}`);
               wss.broadcast(JSON.stringify(data));
               socket.terminate();
               sockets.delete(user.name);

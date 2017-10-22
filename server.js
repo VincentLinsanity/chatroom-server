@@ -31,9 +31,6 @@ app.use(function(err, req, res, next) {
   console.error({
     err
   });
-  if (err.message === "jwt expired") {
-    req.jwtExpired = true;
-  }
   next();
 });
 

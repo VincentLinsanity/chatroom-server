@@ -8,12 +8,11 @@
   "scripts": {
     "dev": "better-npm-run dev",
     "lint": "better-npm-run lint",
-    "build": "better-npm-run build",
     "prod": "better-npm-run prod"
   },
   "betterScripts": {
     "dev": {
-      "command": "concurrently --kill-others \"nodemon --exec babel-node server.js | bunyan\" \"node webpack/webpack-dev-server --env.dev --history-api-fallback --progress --inline --hot\"",
+      "command": "concurrently --kill-others \"nodemon --exec babel-node server.js\"",
       "env": {
         "NODE_ENV": "development"
       }
@@ -22,13 +21,6 @@
       "command": "eslint config/ helpers/ libs/ routes/ --ext .js",
       "env": {
         "NODE_ENV": "development"
-      }
-    },
-    "build": {
-      "command": "babel-node build.js | bunyan",
-      "env": {
-        "NODE_ENV": "production",
-        "DEBUG": "build:*"
       }
     },
     "prod": {

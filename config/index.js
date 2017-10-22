@@ -1,5 +1,4 @@
 const path = require("path");
-const pathBase = path.resolve(__dirname, "..");
 
 const config = {
   api: {

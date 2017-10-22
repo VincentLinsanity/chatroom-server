@@ -19,3 +19,14 @@ npm install
 ```
 node server.js
 ```
+
+## Docker
+ - Build docker image
+ ```
+ sh docker-build-backend.sh
+ ```
+
+ - Run image
+ ```
+ docker-compose up -d
+ ```
