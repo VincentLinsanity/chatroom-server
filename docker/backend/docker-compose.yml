@@ -1,0 +1,10 @@
+version: '2'
+services:
+  chatroomserver:
+    build: .
+    image: vincnet/chatroomserver:latest
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "3000:3000"
+    restart: always
