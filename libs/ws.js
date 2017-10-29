@@ -4,6 +4,21 @@ const HashMap = require("hashmap");
 const sockets = new HashMap();
 const cleanTasks = new HashMap();
 
+const createCleanTask = (wss, type, name, message) => {
+  const task = setTimeout(() => {
+    const data = {
+      type,
+      name,
+      message
+    };
+    wss.broadcast(JSON.stringify(data));
+    const socket = sockets.get(name);
+    socket.terminate();
+    sockets.delete(name);
+  }, config.timeout);
+  return task;
+};
+
 module.exports = {
   sockets,
   setup: server => {
@@ -20,7 +35,7 @@ module.exports = {
     wss.on("connection", socket => {
       socket.on("message", message => {
         const user = JSON.parse(message);
-        if (user.login == true) {
+        if (user.login === true) {
           const data = {
             type: "system",
             name: user.name,
@@ -30,20 +45,15 @@ module.exports = {
           sockets.set(user.name, socket);
           cleanTasks.set(
             user.name,
-            setTimeout(() => {
-              const data = {
-                type: "system",
-                name: user.name,
-                message: `${user.name} was disconnected due to
-                    inactivity`
-              };
-              wss.broadcast(JSON.stringify(data));
-              socket.terminate();
-              sockets.delete(user.name);
-            }, config.timeout)
+            createCleanTask(
+              wss,
+              "system",
+              user.name,
+              `${user.name} was disconnected due to inactivity`
+            )
           );
         }
-        if (user.logout == true) {
+        if (user.logout === true) {
           sockets.delete(user.name);
           clearTimeout(cleanTasks.get(user.name));
           cleanTasks.delete(user.name);
@@ -59,17 +69,12 @@ module.exports = {
           cleanTasks.delete(user.name);
           cleanTasks.set(
             user.name,
-            setTimeout(() => {
-              const data = {
-                type: "system",
-                name: user.name,
-                message: `${user.name} was disconnected due to
-                        inactivity`
-              };
-              wss.broadcast(JSON.stringify(data));
-              socket.terminate();
-              sockets.delete(user.name);
-            }, config.timeout)
+            createCleanTask(
+              wss,
+              "system",
+              user.name,
+              `${user.name} was disconnected due to inactivity`
+            )
           );
           wss.broadcast(JSON.stringify(user));
         }
